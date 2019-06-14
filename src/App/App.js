@@ -1,27 +1,55 @@
 import React, {Component} from 'react';
 import {Route, Link} from 'react-router-dom';
+
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+
+import NotefulContext from '../NotefulContext';
 import NoteListNav from '../NoteListNav/NoteListNav';
 import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
 import dummyStore from '../dummy-store';
+import AddFolder from '../AddFolder';
+import AddNote from '../AddNote';
+import ThrowError from './ThrowError';
+import ErrorBoundary from '../ErrorHandlers/ErrorBoundary';
 import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
+
 import './App.css';
+
 
 class App extends Component {
     state = {
         notes: [],
-        folders: []
+        folders: [],
     };
+
+    handleAddFolder = folder => {
+        this.setState({
+            folders: [...this.state.folders, folder]
+        })
+    }
+
+    handleAddNote = note => {
+        this.setState({
+            notes: [...this.state.notes, note]
+        })
+    }
 
     componentDidMount() {
         // fake date loading from API call
         setTimeout(() => this.setState(dummyStore), 600);
     }
 
+    handleDeleteNote = noteId => {
+        this.setState({
+            notes: this.state.notes.filter(note => note.id !== noteId)
+        });
+    }
+
     renderNavRoutes() {
-        const {notes, folders} = this.state;
+        
+        //const {notes, folders} = this.state;
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
@@ -29,24 +57,10 @@ class App extends Component {
                         exact
                         key={path}
                         path={path}
-                        render={routeProps => (
-                            <NoteListNav
-                                folders={folders}
-                                notes={notes}
-                                {...routeProps}
-                            />
-                        )}
+                        component={NoteListNav}
                     />
                 ))}
-                <Route
-                    path="/note/:noteId"
-                    render={routeProps => {
-                        const {noteId} = routeProps.match.params;
-                        const note = findNote(notes, noteId) || {};
-                        const folder = findFolder(folders, note.folderId);
-                        return <NotePageNav {...routeProps} folder={folder} />;
-                    }}
-                />
+                <Route path="/note/:noteId" component={NotePageNav} />
                 <Route path="/add-folder" component={NotePageNav} />
                 <Route path="/add-note" component={NotePageNav} />
             </>
@@ -54,7 +68,7 @@ class App extends Component {
     }
 
     renderMainRoutes() {
-        const {notes, folders} = this.state;
+        
         return (
             <>
                 {['/', '/folder/:folderId'].map(path => (
@@ -62,45 +76,52 @@ class App extends Component {
                         exact
                         key={path}
                         path={path}
-                        render={routeProps => {
-                            const {folderId} = routeProps.match.params;
-                            const notesForFolder = getNotesForFolder(
-                                notes,
-                                folderId
-                            );
-                            return (
-                                <NoteListMain
-                                    {...routeProps}
-                                    notes={notesForFolder}
-                                />
-                            );
-                        }}
+                        component={NoteListMain}
                     />
                 ))}
+                <ErrorBoundary>
                 <Route
                     path="/note/:noteId"
-                    render={routeProps => {
-                        const {noteId} = routeProps.match.params;
-                        const note = findNote(notes, noteId);
-                        return <NotePageMain {...routeProps} note={note} />;
-                    }}
+                    component={NotePageMain}
+                />
+                </ErrorBoundary>
+                <Route 
+                    path="/add-folder" 
+                    component={AddFolder} 
+                />
+                <Route 
+                    path="/add-note" 
+                    component={AddNote} 
                 />
             </>
         );
     }
 
+
     render() {
+        const contextValue = {
+            notes: this.state.notes,
+            folders: this.state.folders,
+            toggle: this.state.toggle,
+            toggleErrors: this.handleErrorToggle,
+            addNote: this.handleAddNote,
+            addFolder: this.handleAddFolder,
+            deleteNote: this.handleDeleteNote
+        }
+
         return (
-            <div className="App">
-                <nav className="App__nav">{this.renderNavRoutes()}</nav>
-                <header className="App__header">
-                    <h1>
-                        <Link to="/">Noteful</Link>{' '}
-                        <FontAwesomeIcon icon="check-double" />
-                    </h1>
-                </header>
-                <main className="App__main">{this.renderMainRoutes()}</main>
-            </div>
+            <NotefulContext.Provider value={contextValue}>
+                <div className="App">
+                    <nav className="App__nav">{this.renderNavRoutes()}</nav>
+                    <header className="App__header">
+                        <h1>
+                            <Link to="/">Noteful</Link>{' '}
+                            <FontAwesomeIcon icon="check-double" />
+                        </h1>
+                    </header>
+                    <main className="App__main">{this.renderMainRoutes()}</main>
+                </div>
+            </NotefulContext.Provider>
         );
     }
 }

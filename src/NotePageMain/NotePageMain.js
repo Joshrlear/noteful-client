@@ -1,22 +1,67 @@
 import React from 'react'
-import Note from '../Note/Note'
+import PropTypes from 'prop-types';
+
 import './NotePageMain.css'
 
-export default function NotePageMain(props) {
-  return (
-    <section className='NotePageMain'>
-      <Note
-        id={props.note.id}
-        name={props.note.name}
-        modified={props.note.modified}
-      />
-      <div className='NotePageMain__content'>
-        {props.note.content.split(/\n \r|\n/).map((para, i) =>
-          <p key={i}>{para}</p>
-        )}
-      </div>
-    </section>
-  )
+import NotefulContext from '../NotefulContext'
+import Note from '../Note/Note'
+import { findNote } from '../notes-helpers'
+
+export default class NotePageMain extends React.Component {
+  state = {
+    forErrors: this.props.match,
+    toggle: true
+  }
+
+  static defaultProps = {
+    match: {
+      params: {}
+    }
+  }
+
+  static contextType = NotefulContext;
+
+  // sends user back to homepage after delete
+  handleDeleteNote = noteId => {
+    this.props.history.push('/')
+  }
+    
+
+  render () {
+    const { notes=[] } = this.context
+    const { noteId } = this.state.forErrors.params
+    const note = findNote(notes, noteId) || { content: ''}
+      if(this.state.toggle === false) {
+        this.setState({
+          forErrors: 'err'
+        })
+        this.setState({
+          forErrors: this.props.match
+        })
+      }
+    return (
+      <section className='NotePageMain'>
+        <Note
+          id={note.id}
+          name={note.name}
+          modified={note.modified}
+          onDeleteNote={this.handleDeleteNote}
+        />
+        <div className='NotePageMain__content'>
+          {note.content.split(/\n \r|\n/).map((para, i) =>
+            <p key={i}>{para}</p>
+          )}
+        </div>
+        <button onClick={() => this.setState({toggle: !this.state.toggle})}>Error Btn</button>
+        <p><strong><em>
+          Clicking this button will display an 
+        <br/>
+          error to show "Error Boundaries"
+        </em></strong></p>
+      </section>
+    )    
+  }
+
 }
 
 NotePageMain.defaultProps = {
@@ -24,3 +69,9 @@ NotePageMain.defaultProps = {
     content: '',
   }
 }
+
+NotePageMain.propType = {
+  forErrors: PropTypes.object.isRequired,
+    push: PropTypes.func.isRequired,
+    params: PropTypes.array.isRequired
+};  

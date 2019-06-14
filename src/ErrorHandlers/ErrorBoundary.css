@@ -1,0 +1,10 @@
+.err_msg {
+    color: white;
+    text-align: center;
+    padding: 30px;
+}
+
+.back_btn {
+    margin-left: 50%;
+    margin-right: 50%;
+}
