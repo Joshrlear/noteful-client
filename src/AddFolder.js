@@ -2,20 +2,28 @@ import React from 'react';
 import NotefulContext from './NotefulContext';
 import config from './config';
 import PropTypes from 'prop-types';
+import ErrorMsg from './ErrorMsg/ErrorMsg';
 
 export default class AddFolder extends React.Component {
-    state = {
+    constructor(props) {
+        super(props);
+        this.state = {
         error: null,
         title: "",
         formValid: false,
         titleValid: false,
-        validationMessages: ""
+        validationMessages: "",
+        };
+        this.title = React.createRef();
     }
 
     static contextType = NotefulContext;
+    
+    goBack = () => {
+        this.props.history.goBack();
+    }
 
-    updateFormEntry(e) {
-        console.log(e);            
+    updateFormEntry(e) {           
         const name = e.target.name;
         const value = e.target.value;
         this.setState({
@@ -24,7 +32,6 @@ export default class AddFolder extends React.Component {
     }
 
     validateEntry(name, value) {
-        console.log(`${name}: ${value}`)
         let inputErrors;
         let hasErrors = false;
 
@@ -52,7 +59,8 @@ export default class AddFolder extends React.Component {
         }
         else {this.setState({
             formValid: !this.formValid
-        })}
+            }
+        )}
       }
 
     handleSubmit(e) {
@@ -75,24 +83,19 @@ export default class AddFolder extends React.Component {
         })
         .then(res => {
             if (!res.ok) {
-                return res.json().then(err => {
-                    console.log(`Error is: ${err}`)
-                    throw err
+                return res.json().then(error => {
+                    console.log(`Error is: ${error}`)
+                    throw error
                 })
             }
             return res.json()
         })
         .then(data => {
-            /* console.log('1')
-            folder.name.value = ''
-            console.log('2') */
-            this.props.history.push('/')
-            console.log('3')
+            this.goBack()
             this.context.addFolder(data)
-            console.log('4')
         })
-        .catch(err => {
-            this.setState({ err })
+        .catch(error => {
+            this.setState({ error })
         })
     }
 
@@ -103,6 +106,9 @@ export default class AddFolder extends React.Component {
                 className="add__folder"
                 onSubmit={e => this.handleSubmit(e)}>
                 <h2>Add Folder</h2>
+                <ErrorMsg
+                    validationMessages={this.state.validationMessages}
+                />
                 <div className="form-group">
                   <label htmlFor="title">Title</label>
                   <input 
@@ -110,11 +116,17 @@ export default class AddFolder extends React.Component {
                     className="noteful__title"
                     name="title" 
                     id="title" 
+                    aria-label="Title"
+                    aria-required="true"
+                    ref={this.title}
                     placeholder="Folder Title"
                     onChange={e => this.updateFormEntry(e)}/>
                 </div>
                 <div className="form-group">
-                 <button type="button" className="cancel__button">
+                 <button 
+                    type="button" 
+                    className="cancel__button"
+                    onClick={() => this.goBack()}>
                      Cancel
                  </button>
                  <button 

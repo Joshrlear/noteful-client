@@ -2,7 +2,7 @@ import React from 'react';
 import { Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import Back from './Back';
+import Back from '../Back/Back';
 import './ErrorBoundary.css';
 
 class ErrorBoundary extends React.Component {
@@ -18,12 +18,7 @@ class ErrorBoundary extends React.Component {
         return { hasError: true }
     }
 
-    goBack = () => {
-        this.props.history.goBack();
-    }
-
     render() {
-        console.log(this.props)
         if (this.state.hasError) {      
             return (
                 <>

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import NotefulContext from './NotefulContext';
 import config from './config';
 
@@ -16,8 +15,11 @@ export default class AddNote extends React.Component {
 
     static contextType = NotefulContext;
 
-    updateFormEntry(e) {
-        console.log(e.target);            
+    goBack = () => {
+        this.props.history.goBack();
+    }
+
+    updateFormEntry(e) {       
         const name = e.target.name;
         const value = e.target.value;
         let id;
@@ -31,7 +33,6 @@ export default class AddNote extends React.Component {
     }
 
     validateEntry(name, value) {
-        console.log(`${name}: ${value}`)
         let inputErrors;
         let hasErrors = false;
 
@@ -98,13 +99,8 @@ export default class AddNote extends React.Component {
             return res.json()
         })
         .then(data => {
-            //note.name = ''
-            //note.content = ''
-            console.log(data)
-            this.props.history.push('/')
-            console.log('3')
+            this.goBack()
             this.context.addNote(data)
-            console.log('4')
         })
         .catch(err => {
             this.setState({ err })
@@ -113,7 +109,6 @@ export default class AddNote extends React.Component {
 
     
     render() {
-        console.log(this.context.error);
         const folders = this.context.folders;
         const options = folders.map((folder) => {
             return(
@@ -161,7 +156,10 @@ export default class AddNote extends React.Component {
                     </select>
                 </div>
                 <div className="form-group">
-                 <button type="button" className="cancel__button">
+                 <button 
+                    type="button" 
+                    className="cancel__button"
+                    onClick={()=> this.goBack()}>
                      Cancel
                  </button>
                  <button 
@@ -174,8 +172,4 @@ export default class AddNote extends React.Component {
             </form> 
         )
     }
-}
-
-AddNote.propTypes = {
-    push: PropTypes.func.isRequired
 }

@@ -11,9 +11,7 @@ import NotePageMain from '../NotePageMain/NotePageMain';
 import dummyStore from '../dummy-store';
 import AddFolder from '../AddFolder';
 import AddNote from '../AddNote';
-import ThrowError from './ThrowError';
 import ErrorBoundary from '../ErrorHandlers/ErrorBoundary';
-import {getNotesForFolder, findNote, findFolder} from '../notes-helpers';
 
 import './App.css';
 
@@ -22,7 +20,14 @@ class App extends Component {
     state = {
         notes: [],
         folders: [],
+        errorBoundaryKey: 0
     };
+
+    handleBackButton = () => {
+        this.setState(prevState => ({
+            errorBoundaryKey: prevState.errorBoundaryKey + 1
+        }), console.clear());
+    }
 
     handleAddFolder = folder => {
         this.setState({
@@ -79,7 +84,7 @@ class App extends Component {
                         component={NoteListMain}
                     />
                 ))}
-                <ErrorBoundary>
+                <ErrorBoundary key={this.state.errorBoundaryKey}>
                 <Route
                     path="/note/:noteId"
                     component={NotePageMain}
@@ -106,7 +111,8 @@ class App extends Component {
             toggleErrors: this.handleErrorToggle,
             addNote: this.handleAddNote,
             addFolder: this.handleAddFolder,
-            deleteNote: this.handleDeleteNote
+            deleteNote: this.handleDeleteNote,
+            back: this.handleBackButton
         }
 
         return (

@@ -43,7 +43,6 @@ export default class NotePageNav extends React.Component {
             {folder.name}
           </h3>
         )}
-        <h2>I am in the Navbar</h2>
       </div>
     )
   }
