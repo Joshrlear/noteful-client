@@ -21,6 +21,7 @@ export default class NoteListNav extends Component {
           {folders.map(folder =>
             <li key={folder.id}>
               <NavLink
+                aria-controls="note__list"
                 className='NoteListNav__folder-link'
                 to={`/folder/${folder.id}`}
               >
@@ -34,6 +35,7 @@ export default class NoteListNav extends Component {
         </ul>
         <div className='NoteListNav__button-wrapper'>
           <CircleButton
+            
             tag={Link}
             to='/add-folder'
             type='button'

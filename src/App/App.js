@@ -8,12 +8,12 @@ import NoteListNav from '../NoteListNav/NoteListNav';
 import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
-import dummyStore from '../dummy-store';
 import AddFolder from '../AddFolder';
 import AddNote from '../AddNote';
 import ErrorBoundary from '../ErrorHandlers/ErrorBoundary';
 
 import './App.css';
+import config from '../config';
 
 
 class App extends Component {
@@ -42,8 +42,40 @@ class App extends Component {
     }
 
     componentDidMount() {
-        // fake date loading from API call
-        setTimeout(() => this.setState(dummyStore), 600);
+        ['folders', 'notes'].map((endPoint) => fetch(`${config.API_ENDPOINT}/${endPoint}`, {
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json'
+            }
+        })
+        .then(res => {
+            if(!res.ok) {
+                return res.json().then(error => {
+                    console.log(`Error: ${error}`)
+                    console.log(res)
+                    throw error
+                })
+            }
+            return res.json()
+        })
+        .then(data => {
+            if(endPoint === 'notes') {
+                data.map(note => {
+                    return this.handleAddNote(note)
+                })
+                
+            }
+            else {
+                data.map(folder => {
+                    return this.handleAddFolder(folder)
+                })
+            }
+        })
+        .catch(error => {
+            this.setState({
+                error: `error for ${endPoint}: ${error}`
+            })
+        }))
     }
 
     handleDeleteNote = noteId => {

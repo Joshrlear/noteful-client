@@ -132,6 +132,8 @@ export default class AddNote extends React.Component {
                     className="noteful__title"
                     name="title" 
                     id="title" 
+                    aria-label="Title"
+                    aria-required="true"
                     placeholder="Note Title"
                     onChange={e => this.updateFormEntry(e)}/>
                 </div>
@@ -141,6 +143,8 @@ export default class AddNote extends React.Component {
                         className="noteful__content"
                         name="content" 
                         id="content"
+                        aria-label="Note:"
+                        aria-required="false"
                         onChange={e => this.updateFormEntry(e)}/>
                 </div>
                 <div className="form-group">
@@ -150,6 +154,8 @@ export default class AddNote extends React.Component {
                     className="noteful__note-folder"
                     name="folderSelect" 
                     id="folder-select" 
+                    aria-label="folder"
+                    aria-required="true"
                     onChange={e => this.updateFormEntry(e)}>
                         <option>Select</option>
                         { options }

@@ -14,7 +14,6 @@ export default class AddFolder extends React.Component {
         titleValid: false,
         validationMessages: "",
         };
-        this.title = React.createRef();
     }
 
     static contextType = NotefulContext;
@@ -118,8 +117,8 @@ export default class AddFolder extends React.Component {
                     id="title" 
                     aria-label="Title"
                     aria-required="true"
-                    ref={this.title}
                     placeholder="Folder Title"
+                    aria-placeholder="Folder Title"
                     onChange={e => this.updateFormEntry(e)}/>
                 </div>
                 <div className="form-group">
