@@ -5,7 +5,7 @@ import React from 'react';
 export default function ErrMsg(props) {
 
     return (
-        <p classname="input__errmessage">
+        <p className="input__errmessage">
             {props.validationMessages}
         </p>
     )
