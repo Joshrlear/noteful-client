@@ -1,3 +1,8 @@
+.title {
+  margin-top: 0px;
+  text-align: center;
+}
+
 .Noteful-form {
   background-color: #1d3656;
   color: #dedede;
@@ -9,6 +14,7 @@
   display: block;
   font-size: 16px;
   padding-bottom: 8px;
+  margin-top: 15px;
 }
 
 .Noteful-form input,
@@ -28,9 +34,12 @@
 }
 .Noteful-form > .buttons {
   margin-top: 26px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .Noteful-form button {
+  width: 45%;
   background-color: #010d1e;
   border-radius: 4px;
   border: 0;
@@ -44,5 +53,10 @@
 }
 .Noteful-form button[type="submit"]:hover {
   background-color: #29862e;
+  color: white;
+}
+
+.Noteful-form button[type="button"]:hover {
+  background-color: rgb(211, 32, 32);
   color: white;
 }

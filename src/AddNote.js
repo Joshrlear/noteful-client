@@ -1,17 +1,21 @@
 import React from 'react';
 import NotefulContext from './NotefulContext';
 import config from './config';
+import ErrorMsg from './ErrorMsg/ErrorMsg';
+import './NotefulForm/NotefulForm.css';
 
 export default class AddNote extends React.Component {
     state = {
-        error: null,
         title: "",
         content: "",
+        folderSelect: "",
+        folderId: "",
         formValid: false,
         titleValid: false,
         contentValid: false,
-        validationMessages: ""
-    }
+        folderSelectValid: false,
+        validationMessage: null
+    };
 
     static contextType = NotefulContext;
 
@@ -33,33 +37,43 @@ export default class AddNote extends React.Component {
     }
 
     validateEntry(name, value) {
-        let inputErrors;
         let hasErrors = false;
 
         value = value.trim();
-        if (value < 1) {
-            inputErrors = `${name} is required.`;
-        } 
+        if((name === 'title') || (name === 'content')) {
+            if (value.length < 1) {
+                hasErrors = true
+            } 
+
+            else {
+                hasErrors = false
+            }
+        }
+        
+        else if((name === 'folderSelect') && (value === 'Select')) {
+            hasErrors = true
+        }
         
         else {
-            inputErrors = '';
-            hasErrors = false;
+            hasErrors = false
         }
+        
         this.setState({
-            validationMessages: inputErrors,
             [`${name}Valid`]: !hasErrors,
         }, this.formValid );
     }
 
     formValid() {
-        const { titleValid, contentValid } = this.state;
-        if (titleValid && contentValid === true){
+        const { titleValid, contentValid, folderSelectValid } = this.state;
+        if (titleValid && contentValid && folderSelectValid === true){
             this.setState({
-                formValid: true
+                formValid: true,
+                validationMessage: null
             });
         }
         else {this.setState({
-            formValid: !this.formValid
+            formValid: !this.formValid,
+            validationMessage: 'All fields are required.'
         })}
       }
 
@@ -122,14 +136,17 @@ export default class AddNote extends React.Component {
 
         return (
             <form 
-                className="add__note"
+                className="Noteful-form"
                 onSubmit={e => this.handleSubmit(e)}>
-                <h2>Add Note</h2>
+                <h2 className="title">Add Note</h2>
+                <ErrorMsg
+                    validationMessage={this.state.validationMessage}
+                />
                 <div className="form-group">
                   <label htmlFor="title">Title</label>
                   <input 
                     type="text" 
-                    className="noteful__title"
+                    className="field"
                     name="title" 
                     id="title" 
                     aria-label="Title"
@@ -140,7 +157,7 @@ export default class AddNote extends React.Component {
                 <div className="form-group">
                    <label htmlFor="content">Note:</label>
                    <textarea 
-                        className="noteful__content"
+                        className="field"
                         name="content" 
                         id="content"
                         aria-label="Note:"
@@ -151,26 +168,27 @@ export default class AddNote extends React.Component {
                   <label htmlFor="folder-select">folder</label>
                   <select 
                     type="text" 
-                    className="noteful__note-folder"
+                    className="field"
                     name="folderSelect" 
                     id="folder-select" 
                     aria-label="folder"
                     aria-required="true"
+                    ref={this.folderSelect}
                     onChange={e => this.updateFormEntry(e)}>
                         <option>Select</option>
                         { options }
                     </select>
                 </div>
-                <div className="form-group">
+                <div className="buttons">
                  <button 
                     type="button" 
-                    className="cancel__button"
+                    className="button"
                     onClick={()=> this.goBack()}>
                      Cancel
                  </button>
                  <button 
                     type="submit" 
-                    className="save__button"
+                    className="button"
                     disabled={!this.state.formValid}>
                      Save
                  </button>

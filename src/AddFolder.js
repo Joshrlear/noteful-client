@@ -3,16 +3,17 @@ import NotefulContext from './NotefulContext';
 import config from './config';
 import PropTypes from 'prop-types';
 import ErrorMsg from './ErrorMsg/ErrorMsg';
+import './NotefulForm/NotefulForm.css'
 
 export default class AddFolder extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-        error: null,
+        hasErrors: false,
         title: "",
         formValid: false,
         titleValid: false,
-        validationMessages: "",
+        validationMessage: "",
         };
     }
 
@@ -32,7 +33,7 @@ export default class AddFolder extends React.Component {
 
     validateEntry(name, value) {
         let inputErrors;
-        let hasErrors = false;
+        let hasErrors = this.state.hasErrors;
 
         value = value.trim();
         if (value < 1) {
@@ -44,8 +45,9 @@ export default class AddFolder extends React.Component {
             hasErrors = false;
         }
         this.setState({
-            validationMessages: inputErrors,
+            validationMessage: inputErrors,
             [`${name}Valid`]: !hasErrors,
+            hasErrors: !hasErrors
         }, this.formValid );
     }
 
@@ -102,17 +104,17 @@ export default class AddFolder extends React.Component {
         
         return (
             <form 
-                className="add__folder"
+                className="Noteful-form"
                 onSubmit={e => this.handleSubmit(e)}>
-                <h2>Add Folder</h2>
+                <h2 className="title">Add Folder</h2>
                 <ErrorMsg
-                    validationMessages={this.state.validationMessages}
+                    validationMessage={this.state.validationMessage}
                 />
                 <div className="form-group">
                   <label htmlFor="title">Title</label>
                   <input 
                     type="text" 
-                    className="noteful__title"
+                    className="field"
                     name="title" 
                     id="title" 
                     aria-label="Title"
@@ -121,17 +123,17 @@ export default class AddFolder extends React.Component {
                     aria-placeholder="Folder Title"
                     onChange={e => this.updateFormEntry(e)}/>
                 </div>
-                <div className="form-group">
+                <div className="buttons">
                  <button 
                     type="button" 
-                    className="cancel__button"
+                    className="button"
                     onClick={() => this.goBack()}>
                      Cancel
                  </button>
                  <button 
                     type="submit" 
-                    className="save__button"
-                    disabled={!this.state.formValid}>
+                    className="button"
+                    disabled={this.state.formValid === false}>
                      Save
                  </button>
                  {}

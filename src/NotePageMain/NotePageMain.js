@@ -52,8 +52,12 @@ export default class NotePageMain extends React.Component {
             <p key={i}>{para}</p>
           )}
         </div>
-        <button onClick={() => this.setState({toggle: !this.state.toggle})}>Error Btn</button>
-        <p><strong><em>
+        <button 
+          aria-describedBy='errMessage'
+          onClick={() => this.setState({toggle: !this.state.toggle})}>
+            Error Btn
+          </button>
+        <p id='errMessage'><strong><em>
           Clicking this button will display an 
         <br/>
           error to show "Error Boundaries"
