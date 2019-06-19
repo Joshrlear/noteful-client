@@ -53,7 +53,7 @@ export default class NotePageMain extends React.Component {
           )}
         </div>
         <button 
-          aria-describedBy='errMessage'
+          aria-describedby='errMessage'
           onClick={() => this.setState({toggle: !this.state.toggle})}>
             Error Btn
           </button>

@@ -29,10 +29,13 @@ export default class AddNote extends React.Component {
         let id;
         if (e.target.selectedOptions) {
             id = e.target.selectedOptions[0].id;
+            this.setState({
+                'folderId': id 
+            })
         }
         this.setState({
             [e.target.name]: e.target.value,
-            'folderId': id
+            
         }, () => {this.validateEntry(name, value)});
     }
 
@@ -133,7 +136,7 @@ export default class AddNote extends React.Component {
             </option>
             )
         })
-
+        console.log(this.state.folderId)
         return (
             <form 
                 className="Noteful-form"
