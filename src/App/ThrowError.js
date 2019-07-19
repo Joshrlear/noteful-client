@@ -18,7 +18,7 @@ class ThrowError extends React.Component {
 
     updateContextErr(e) {
       let value = e.target;
-      console.log(value)
+
         /* const toggle = this.context.toggle;
         this.context.toggleErrors(!toggle);
         throw new Error; */

@@ -52,7 +52,7 @@ class App extends Component {
             if(!res.ok) {
                 return res.json().then(error => {
                     console.log(`Error: ${error}`)
-                    console.log(res)
+
                     throw error
                 })
             }

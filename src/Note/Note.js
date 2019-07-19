@@ -20,7 +20,7 @@ export default class Note extends React.Component {
 
   handleClickDelete = () => {
     const noteId = this.props.id
-    console.log(noteId)
+
 
     fetch(`${config.API_ENDPOINT}/notes/${noteId}`, {
       method: 'DELETE',
@@ -46,7 +46,7 @@ export default class Note extends React.Component {
 
   render() {
     const { name, id, modified } = this.props
-    console.log(name, id, modified)
+
     return (
       <div className='Note'>
         <h2 className='Note__title'>

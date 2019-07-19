@@ -66,13 +66,10 @@ export default class AddFolder extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        const { title, titleValid } = this.state;
+        const { title } = this.state;
         const folder = {
             folder_name: title
         }
-        console.log(`
-            Title: ${title}\n 
-            Is title valid: ${titleValid}\n`);
 
         this.setState({error: null})
         fetch(`${config.API_ENDPOINT}/folders`, {

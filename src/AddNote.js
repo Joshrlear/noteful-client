@@ -82,19 +82,13 @@ export default class AddNote extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        const { title, content, folderId, titleValid, contentValid } = this.state;
+        const { title, content, folderId } = this.state;
         const note = {
             note_name: title,
             content: content,
             folder_id: folderId,
             modified: new Date()
         }
-        console.log(`
-            Title: ${title}\n 
-            Content: ${content}\n 
-            Folder Id: ${folderId}\n
-            Is title valid: ${titleValid}\n
-            Is content valid: ${contentValid}\n`);
 
         this.setState({error: null})
 
@@ -136,7 +130,7 @@ export default class AddNote extends React.Component {
             </option>
             )
         })
-        console.log(this.state.folderId)
+        
         return (
             <form 
                 className="Noteful-form"
