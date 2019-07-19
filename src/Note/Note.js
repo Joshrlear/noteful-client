@@ -32,8 +32,6 @@ export default class Note extends React.Component {
       if (!res.ok) {
         return res.json().then(e => Promise.reject(e))
       }
-      console.log(res)
-      return res.json()
     })
     .then(() => {
       // deletes from context which updates state by removing note
