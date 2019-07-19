@@ -32,6 +32,7 @@ export default class Note extends React.Component {
       if (!res.ok) {
         return res.json().then(e => Promise.reject(e))
       }
+      console.log(res)
       return res.json()
     })
     .then(() => {
@@ -47,6 +48,7 @@ export default class Note extends React.Component {
 
   render() {
     const { name, id, modified } = this.props
+    console.log(name, id, modified)
     return (
       <div className='Note'>
         <h2 className='Note__title'>

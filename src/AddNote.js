@@ -84,9 +84,9 @@ export default class AddNote extends React.Component {
         e.preventDefault();
         const { title, content, folderId, titleValid, contentValid } = this.state;
         const note = {
-            name: title,
+            note_name: title,
             content: content,
-            folderId: folderId,
+            folder_id: folderId,
             modified: new Date()
         }
         console.log(`
@@ -132,7 +132,7 @@ export default class AddNote extends React.Component {
             <option 
                 key ={folder.id} 
                 id={folder.id}>
-            {folder.name}
+            {folder.folder_name}
             </option>
             )
         })

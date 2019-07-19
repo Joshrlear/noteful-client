@@ -23,16 +23,14 @@ export default class NoteListMain extends Component {
     const { folderId } = this.props.match.params
     const { notes=[] } = this.context
     const notesForFolder = getNotesForFolder(notes, folderId)
-
     return (
       <section className='NoteListMain'>
         <ul id="note__list">
           {notesForFolder.map(note => 
             <li key={note.id}>
-                <Note
-
+              <Note
                 id={note.id}
-                name={note.name}
+                name={note.note_name}
                 modified={note.modified}
               />
               
